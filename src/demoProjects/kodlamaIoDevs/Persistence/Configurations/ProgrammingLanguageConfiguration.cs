@@ -11,8 +11,8 @@ namespace Persistence.Configurations
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Name).HasMaxLength(50).IsRequired();
 
-            ProgrammingLanguage[] brandEntitySeeds = { new(1, "C#"), new(2, "Java") };
-            builder.HasData(brandEntitySeeds);
+            ProgrammingLanguage[] programmingLanguageEntitySeeds = { new(1, "C#"), new(2, "Java") };
+            builder.HasData(programmingLanguageEntitySeeds);
         }
     }
 }

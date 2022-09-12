@@ -11,13 +11,13 @@ namespace Application.Features.ProgrammingLanguages.Commands.CreateProgrammingLa
     {
         public string Name { get; set; }
 
-        public class CreateBrandCommandHandler : IRequestHandler<CreateProgrammingLanguageCommand, CreatedProgrammingLanguageDto>
+        public class CreateProgrammingLanguageCommandHandler : IRequestHandler<CreateProgrammingLanguageCommand, CreatedProgrammingLanguageDto>
         {
             private readonly IProgrammingLanguageRepository _programmingLanguageRepository;
             private readonly IMapper _mapper;
             private readonly ProgrammingLanguageBusinessRules _programmingLanguageBusinessRules;
 
-            public CreateBrandCommandHandler(IProgrammingLanguageRepository programmingLanguageRepository, IMapper mapper, ProgrammingLanguageBusinessRules programmingLanguageBusinessRules)
+            public CreateProgrammingLanguageCommandHandler(IProgrammingLanguageRepository programmingLanguageRepository, IMapper mapper, ProgrammingLanguageBusinessRules programmingLanguageBusinessRules)
             {
                 _programmingLanguageRepository = programmingLanguageRepository;
                 _mapper = mapper;

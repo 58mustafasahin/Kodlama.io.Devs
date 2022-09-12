@@ -12,7 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Authorizations\Constants\" />
+    <Folder Include="Features\Authorizations\Dtos\" />
+    <Folder Include="Features\Authorizations\Models\" />
+    <Folder Include="Features\Authorizations\Queries\" />
     <Folder Include="Features\ProgrammingLanguages\Constants\" />
+    <Folder Include="Features\ProgrammingLanguageTechnologies\Constants\" />
+    <Folder Include="Features\UserSocialMediaAddresses\Constants\" />
   </ItemGroup>
 
   <ItemGroup>

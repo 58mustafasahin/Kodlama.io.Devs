@@ -11,13 +11,13 @@ namespace Application.Features.ProgrammingLanguages.Commands.DeleteProgrammingLa
     {
         public int Id { get; set; }
 
-        public class DeleteBrandCommandHandler : IRequestHandler<DeleteProgrammingLanguageCommand, DeletedProgrammingLanguageDto>
+        public class DeleteProgrammingLanguageCommandHandler : IRequestHandler<DeleteProgrammingLanguageCommand, DeletedProgrammingLanguageDto>
         {
             private readonly IProgrammingLanguageRepository _programmingLanguageRepository;
             private readonly IMapper _mapper;
             private readonly ProgrammingLanguageBusinessRules _programmingLanguageBusinessRules;
 
-            public DeleteBrandCommandHandler(IProgrammingLanguageRepository programmingLanguageRepository, IMapper mapper, ProgrammingLanguageBusinessRules programmingLanguageBusinessRules)
+            public DeleteProgrammingLanguageCommandHandler(IProgrammingLanguageRepository programmingLanguageRepository, IMapper mapper, ProgrammingLanguageBusinessRules programmingLanguageBusinessRules)
             {
                 _programmingLanguageRepository = programmingLanguageRepository;
                 _mapper = mapper;
