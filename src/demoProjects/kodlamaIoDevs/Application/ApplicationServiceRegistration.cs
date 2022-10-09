@@ -1,6 +1,8 @@
 ﻿using Application.Features.Authorizations.Rules;
+using Application.Features.OperationClaims.Rules;
 using Application.Features.ProgrammingLanguages.Rules;
 using Application.Features.ProgrammingLanguageTechnologies.Rules;
+using Application.Features.UserOperationClaims.Rules;
 using Application.Features.UserSocialMediaAddresses.Rules;
 using Application.Services.AuthService;
 using Core.Application.Pipelines.Authorization;
@@ -20,9 +22,11 @@ namespace Application
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
+            services.AddScoped<AuthBusinessRules>();
+            services.AddScoped<OperationClaimBusinessRules>();
             services.AddScoped<ProgrammingLanguageBusinessRules>();
             services.AddScoped<ProgrammingLanguageTechnologyBusinessRules>();
-            services.AddScoped<AuthBusinessRules>();
+            services.AddScoped<UserOperationClaimBusinessRules>();
             services.AddScoped<UserSocialMediaAddressBusinessRules>();
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
