@@ -25,29 +25,28 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "Kodlama.io.Devs.Api", Version = "v1" });
 
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    // configure SwaggerDoc and others
+    // add JWT Authentication
+    var securityScheme = new OpenApiSecurityScheme
     {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
+        Name = "JWT Authentication",
+        Description = "Enter JWT Bearer token",
         In = ParameterLocation.Header,
-        Description = "JWT Authorization header using the Bearer scheme."
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Reference = new OpenApiReference
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
         }
-    });
+    };
+    c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {securityScheme, Array.Empty<string>()}
+                });
+
 });
 
 var tokenOptions = builder.Configuration.GetSection(key: "TokenOptions").Get<TokenOptions>();

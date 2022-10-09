@@ -1,8 +1,9 @@
-﻿using FluentValidation;
+﻿using Core.Security.Dtos;
+using FluentValidation;
 
 namespace Application.Features.Authorizations.Commands.RegisterUser
 {
-    public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
+    public class RegisterUserCommandValidator : AbstractValidator<UserForRegisterDto>
     {
         public RegisterUserCommandValidator()
         {

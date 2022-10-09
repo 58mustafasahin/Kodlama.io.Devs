@@ -5,16 +5,16 @@ using Core.Security.Hashing;
 
 namespace Application.Features.Authorizations.Rules
 {
-    public class UserBusinessRules
+    public class AuthBusinessRules
     {
         private readonly IUserRepository _userRepository;
 
-        public UserBusinessRules(IUserRepository userRepository)
+        public AuthBusinessRules(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
-        public async Task UserEmailAddressCanNotBeDuplicated(string requestEmail)
+        public async Task EmailCanNotBeDuplicatedWhenRegistered(string requestEmail)
         {
             var user = await _userRepository.GetAsync(x => x.Email == requestEmail);
             if (user is not null)

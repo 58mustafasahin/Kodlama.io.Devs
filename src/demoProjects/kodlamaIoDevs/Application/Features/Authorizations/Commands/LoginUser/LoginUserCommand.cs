@@ -1,46 +1,49 @@
-﻿using Application.Features.Authorizations.Rules;
+﻿using Application.Features.Authorizations.Dtos;
+using Application.Features.Authorizations.Rules;
+using Application.Services.AuthService;
 using Application.Services.Repositories;
+using Core.Security.Dtos;
+using Core.Security.Entities;
 using Core.Security.JWT;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Authorizations.Commands.LoginUser
 {
-    public class LoginUserCommand : IRequest<AccessToken>
+    public class LoginUserCommand : IRequest<LoggedInDto>
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public UserForLoginDto UserForLoginDto { get; set; }
+        public string IpAddress { get; set; }
 
-        public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, AccessToken>
+        public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoggedInDto>
         {
             private readonly IUserRepository _userRepository;
-            private readonly UserBusinessRules _userBusinessRules;
-            private readonly ITokenHelper _tokenHelper;
-            private readonly IUserOperationClaimRepository _userOperationClaimRepository;
+            private readonly AuthBusinessRules _authBusinessRules;
+            private readonly IAuthService _authService;
 
-            public LoginUserCommandHandler(IUserRepository userRepository, UserBusinessRules userBusinessRules, ITokenHelper tokenHelper, IUserOperationClaimRepository userOperationClaimRepository)
+            public LoginUserCommandHandler(IUserRepository userRepository, AuthBusinessRules authBusinessRules, IAuthService authService)
             {
                 _userRepository = userRepository;
-                _userBusinessRules = userBusinessRules;
-                _tokenHelper = tokenHelper;
-                _userOperationClaimRepository = userOperationClaimRepository;
+                _authBusinessRules = authBusinessRules;
+                _authService = authService;
             }
 
-            public async Task<AccessToken> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+            public async Task<LoggedInDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
             {
-                var user = await _userRepository.GetAsync(x => x.Email == request.Email);
+                var user = await _userRepository.GetAsync(x => x.Email == request.UserForLoginDto.Email);
 
-                _userBusinessRules.CheckIfUserExists(user);
-                _userBusinessRules.CheckIfPasswordIsCorrect(request.Password, user.PasswordHash, user.PasswordSalt);
+                _authBusinessRules.CheckIfUserExists(user);
+                _authBusinessRules.CheckIfPasswordIsCorrect(request.UserForLoginDto.Password, user.PasswordHash, user.PasswordSalt);
 
-                var userClaims = await _userOperationClaimRepository.GetListAsync(x =>
-                        x.UserId == user.Id,
-                    include: x => x.Include(c => c.OperationClaim),
-                    cancellationToken: cancellationToken);
+                AccessToken createdAccessToken = await _authService.CreateAccessToken(user);
+                RefreshToken createdRefreshToken = await _authService.CreateRefreshToken(user, request.IpAddress);
+                RefreshToken addedRefreshToken = await _authService.AddRefreshToken(createdRefreshToken);
 
-                var accessToken = _tokenHelper.CreateToken(user, userClaims.Items.Select(x => x.OperationClaim).ToList());
-
-                return accessToken;
+                LoggedInDto loggedInDto = new()
+                {
+                    AccessToken = createdAccessToken,
+                    RefreshToken = createdRefreshToken,
+                };
+                return loggedInDto;
             }
         }
     }
